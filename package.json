@@ -1,0 +1,10 @@
+{
+  "name": "d3-gradient",
+  "version": "0.1.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "d3": "4.11.0"
+  }
+}
