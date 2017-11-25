@@ -23,7 +23,7 @@
 <body>
 
 <div class="parent">
-  <svg viewBox="0 0 100 100" id="art"
+  <svg viewBox="30 30 60 60" id="art"
        preserveAspectRatio="xMidYMid slice">
   </svg>
 </div>
@@ -41,30 +41,53 @@
     );
   }
 
-  function randomCircle() {
-    return {
-      r: random(5),
-      cx: random(100),
-      cy: random(100),
-      color: randomColor(),
-      opacity: random(1)
-    };
+  class Dot {
+    randomCircle() {
+      return {
+        r: random(6),
+        cx: random(100),
+        cy: random(100),
+        color: randomColor(),
+        opacity: random(1)
+      };
+    }
+
+    next() {
+      return this.randomCircle();
+    }
   }
 
   const svg = d3.select('#art');
-  const circles = Array(3000)
+  const circles = Array(1000)
     .fill(0)
-    .map(() => randomCircle());
+    .map(() => new Dot());
 
-  svg.selectAll('circle')
-    .data(circles)
+  function draw(dot) {
+    dot.attr('cx', d => d.cx)
+      .attr('cy', d => d.cy)
+      .attr('r', d => d.r)
+      .attr('fill', d => d.color)
+      .attr('opacity', d => d.opacity);
+  }
+
+  let nodes = svg.selectAll('circle')
+    .data(circles.map(c => c.next()))
     .enter()
-    .append('circle')
-    .attr('cx', (d) => d.cx)
-    .attr('cy', (d) => d.cy)
-    .attr('r', (d) => d.r)
-    .attr('fill', (d) => d.color)
-    .attr('opacity', (d) => d.opacity);
+    .append('circle');
+  draw(nodes);
+
+  setInterval(() => {
+    animate();
+  }, 2000);
+
+  function animate() {
+    nodes = svg.selectAll('circle')
+      .data(circles.map(c => c.next()))
+      .transition()
+      .duration(2200);
+    draw(nodes);
+  }
+
 </script>
 
 </body>
