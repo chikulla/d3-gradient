@@ -23,7 +23,7 @@
 <body>
 
 <div class="parent">
-  <svg viewBox="30 30 60 60" id="art"
+  <svg viewBox="20 20 60 60" id="art" style="background-color: black"
        preserveAspectRatio="xMidYMid slice">
   </svg>
 </div>
@@ -44,7 +44,7 @@
   class Dot {
     randomCircle() {
       return {
-        r: random(6),
+        r: random(0.5),
         cx: random(100),
         cy: random(100),
         color: randomColor(),
@@ -58,7 +58,7 @@
   }
 
   const svg = d3.select('#art');
-  const circles = Array(1000)
+  const circles = Array(800)
     .fill(0)
     .map(() => new Dot());
 
@@ -76,15 +76,19 @@
     .append('circle');
   draw(nodes);
 
+  let interval = 2000;
+
+  animate();
   setInterval(() => {
     animate();
-  }, 2000);
+  }, interval * 1.2);
 
   function animate() {
     nodes = svg.selectAll('circle')
       .data(circles.map(c => c.next()))
       .transition()
-      .duration(2200);
+      .ease(d3.easeExp)
+      .duration(interval);
     draw(nodes);
   }
 
